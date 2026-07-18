@@ -50,6 +50,26 @@ pipeline {
 
                         def testSafe = test ? test : "DEFAULT_VALUE"
                         echo ${testSafe}
+
+                        // Elvis - default values
+                        def env_name = params.DEPLOY_ENV ?: "dev"
+                        def branch = params.BRANCH_NAME ?: "main"
+                        def retires = params.RETRIES ?: 3
+
+                        // Safe navigation operator
+                        def msg = env.GIT_COMMIT?.trim()
+
+                        echo "env_name: ${env_name}, branch: ${branch}, retires: ${retires}, msg: ${msg}"
+
+                        def mixedList = ["one", 2, true, 10.5]
+
+                        echo ${mixedList[0]} // prints one
+                        for (item in mixedList) {
+                            echo ${item}
+                        }
+
+                        echo mixedList.join(" | ")
+
                     }
 
                     testFunction()
