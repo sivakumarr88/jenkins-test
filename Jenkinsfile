@@ -29,8 +29,10 @@ pipeline {
                     """
                 }
 
-                def groovyVar = "I am a Groovy variable"
-                echo "Groovy Variable: ${groovyVar}"
+                script {
+                    def groovyVar = "I am a Groovy variable"
+                    echo "Groovy Variable: ${groovyVar}"
+                }
             }
         }
     }
