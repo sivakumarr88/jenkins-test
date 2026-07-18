@@ -1,107 +1,245 @@
+// ============================================================
+// BUGGY JENKINSFILE - Find & Fix All Issues!
+// ============================================================
+
+def printBanner(stageName) {
+    echo '=============================='        // 🐛 BUG #1
+    echo 'STAGE : ${stageName}'                 // 🐛 BUG #2
+    echo '=============================='
+}
+
+def getDeployTag(branchName, buildNum) {
+    if (branchName == 'main') {                 // 🐛 BUG #3
+        return "release-${buildNum}"
+    } else {
+        return "snapshot-${buildNum}"
+    }
+}
+
 pipeline {
+
     agent any
 
+    environment {
+        APP_NAME   = "my-app"
+        BUILD_ENV  = "dev"
+        MAX_RETRY  = 3
+    }
+
+    parameters {
+        booleanParam(name: 'SKIP_TESTS',   defaultValue: false)
+        booleanParam(name: 'SKIP_DEPLOY',  defaultValue: false)
+        choice(name: 'DEPLOY_ENV', choices: ['dev', 'staging', 'prod'])
+    }
+
     stages {
-        stage('Test') {
+
+        // ─────────────────────────────────────────────
+        // STAGE 1 - Variable Basics
+        // ─────────────────────────────────────────────
+        stage('Variable Basics') {
+            steps {
+                def appVersion = "1.0.0"        // 🐛 BUG #4
+                echo "Version: ${appVersion}"
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // STAGE 2 - String & Variable Reference
+        // ─────────────────────────────────────────────
+        stage('String and Variable Reference') {
             steps {
                 script {
-                    def testFunction = {
-                        def name = "Sivakumar"
-                        def age = 38
-                        def male = true
-                        def height = 5.8
+                    def buildLabel  = 'Build-${env.BUILD_NUMBER}'   // 🐛 BUG #5
+                    def deployMsg   = "Deploying ${APP_NAME}"       // 🐛 BUG #6
+                    def skipTests   = params.SKIP_TESTS
 
-                        println name.class
-                        println age.class
-                        println male.class
-                        println height.class
+                    echo "Label   : ${buildLabel}"
+                    echo "Message : ${deployMsg}"
+                    echo "Skip    : ${skipTests}"
+                }
+            }
+        }
 
-                        echo 'Name is ${name} (printed with single quote)'
-                        echo "Name is ${name} (printed with double quote)"
-                        echo '''
-                            Age is ${age} (printed with triple single quote)
-                            Male is ${male} (printed with triple single quote)
-                            Height is ${height} (printed with triple single quote)
-                        '''
-                        echo """
-                            Age is ${age} (printed with triple single quote)
-                            Male is ${male} (printed with triple single quote)
-                            Height is ${height} (printed with triple single quote)
-                        """
+        // ─────────────────────────────────────────────
+        // STAGE 3 - Shell Variable Reference
+        // ─────────────────────────────────────────────
+        stage('Shell Variable Reference') {
+            steps {
+                script {
+                    def groovyVar = "I-am-groovy"
 
-                        def test = null
-                        echo "${test}" // prints null
-                        echo test ? "test is not null" : "test is null" // prints test is null
+                    // passing groovy var into shell
+                    sh 'echo Groovy Var is: ${groovyVar}'           // 🐛 BUG #7
 
-                        def GROOVY_VAR = "GROOVY_VAR"
-                        // Triple single quote → pure shell (no Groovy vars are expanded)
-                        sh '''
-                            SHELL_VAR="SHELL_VAR"
-                            echo "GROOVY_VAR is ${GROOVY_VAR} (printed from shell script)"
-                            echo "SHELL_VAR is ${SHELL_VAR} (printed from shell script)"
-                        '''
+                    // pure shell variable
+                    sh """
+                        SHELL_VAR="I-am-shell"
+                        echo "Shell Var is: $SHELL_VAR"             // 🐛 BUG #8
+                    """
 
-                        // Triple double quote → shell + Groovy vars mixed, Groovy vars are expanded
-                        sh """
-                            SHELL_VAR1="SHELL_VAR1"
-                            echo "GROOVY_VAR is ${GROOVY_VAR} (printed from shell script)"
-                            echo "SHELL_VAR1 is \${SHELL_VAR1} (printed from shell script)"
-                        """
+                    // capture shell output back to groovy
+                    def gitCommit = sh("git rev-parse --short HEAD") // 🐛 BUG #9
+                    echo "Git Commit: ${gitCommit}"
+                }
+            }
+        }
 
-                        def testSafe = test ? test : "DEFAULT_VALUE"
-                        echo "${testSafe}"
+        // ─────────────────────────────────────────────
+        // STAGE 4 - Null Safety & Elvis
+        // ─────────────────────────────────────────────
+        stage('Null Safety') {
+            steps {
+                script {
+                    def gitTag = env.GIT_TAG                        // might be null
 
-                        // Elvis - default values
-                        def env_name = params.DEPLOY_ENV ?: "dev"
-                        def branch = params.BRANCH_NAME ?: "main"
-                        def retires = params.RETRIES ?: 3
+                    def tagMessage = gitTag.toUpperCase()           // 🐛 BUG #10
 
-                        // Safe navigation operator
-                        def msg = env.GIT_COMMIT?.trim()
+                    def releaseType = gitTag ? "release" : "snapshot"
 
-                        echo "env_name: ${env_name}, branch: ${branch}, retires: ${retires}, msg: ${msg}"
+                    echo "Tag     : ${gitTag}"
+                    echo "Message : ${tagMessage}"
+                    echo "Type    : ${releaseType}"
+                }
+            }
+        }
 
-                        def mixedList = ["one", 2, true, 10.5]
+        // ─────────────────────────────────────────────
+        // STAGE 5 - Collections
+        // ─────────────────────────────────────────────
+        stage('Collections') {
+            steps {
+                script {
+                    def services = ["auth-service", "user-service", "order-service"]
+                    def envConfig = [
+                        dev     : [replicas: 1, memory: "512Mi"],
+                        staging : [replicas: 2, memory: "1Gi"],
+                        prod    : [replicas: 3, memory: "2Gi"]
+                    ]
 
-                        echo "${mixedList[0]}" // prints one
-                        for (item in mixedList) {
-                            echo "${item}"
-                        }
+                    // access last service
+                    echo "Last Service : ${services[3]}"            // 🐛 BUG #11
 
-                        echo mixedList.join(" | ")
+                    // access nested map
+                    def selectedConfig = envConfig[params.DEPLOY_ENV]
+                    echo "Replicas : ${selectedConfig.replicas}"
+                    echo "Memory   : ${selectedConfig.memory}"
 
-                        def mixedMap = [name: "Sivakumar", age: 38, male: true, height: 5.8]
-                        echo "${mixedMap['name']}" // prints Sivakumar
-                        for (entry in mixedMap) {
-                            echo "${entry.key} : ${entry.value}"
-                        }
+                    // filter services
+                    def shortNames = services.findAll { it.length() < 10 }  // 🐛 BUG #12 (logical)
+                    echo "Short named services: ${shortNames}"
+                }
+            }
+        }
 
-                        def score = 75
-                        if (score >= 90) {
-                            echo "Grade: A"
-                        } else if(score >=80) {
-                            echo "Grade: B"
-                        } else if(score >=70) {
-                            echo "Grade: C"
-                        } else {
-                            echo "Grade: D"
-                        }
+        // ─────────────────────────────────────────────
+        // STAGE 6 - Loops
+        // ─────────────────────────────────────────────
+        stage('Loops') {
+            steps {
+                script {
+                    def services  = ["auth-service", "user-service", "order-service"]
+                    def envConfig = [dev: "dev-server", staging: "stg-server"]
 
-                        mixedList.each {
-                            item -> echo "${item}"
-                        }
-
-                        mixedMap.each {
-                            key, value -> echo "${key} : ${value}"
-                        }
-
-                        return "Test function executed successfully"
-
+                    // loop over list
+                    for (service in services) {
+                        sh 'echo Building ${service}'               // 🐛 BUG #13
                     }
 
-                    def funResult = testFunction()
-                    echo "${funResult}"
+                    // loop over map
+                    envConfig.each { envName, server ->
+                        echo "Env: ${envName} → Server: ${server}"
+                    }
                 }
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // STAGE 7 - Conditionals
+        // ─────────────────────────────────────────────
+        stage('Conditionals') {
+            steps {
+                script {
+                    def branch = env.BRANCH_NAME
+
+                    if (branch = "main") {                          // 🐛 BUG #14
+                        echo "Main branch - full build"
+                        sh "echo running full build"
+                    } else {
+                        echo "Other branch - quick build"
+                        sh "echo running quick build"
+                    }
+
+                    def retries = env.MAX_RETRY
+                    if (retries > 2) {                              // 🐛 BUG #15
+                        echo "Retries enabled: ${retries}"
+                    }
+                }
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // STAGE 8 - Functions
+        // ─────────────────────────────────────────────
+        stage('Functions') {
+            steps {
+                script {
+                    printBanner("Functions Stage")                  // refers to BUG #1 #2
+
+                    def tag = getDeployTag(env.BRANCH_NAME, env.BUILD_NUMBER)
+                    echo "Tag: ${tag}"                              // refers to BUG #3
+                }
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // STAGE 9 - Exception Handling
+        // ─────────────────────────────────────────────
+        stage('Exception Handling') {
+            steps {
+                script {
+                    try {
+                        echo "Trying risky operation..."
+                        sh "cat non-existent-file.txt"
+
+                    } catch (e) {
+                        echo 'Caught error: ${e.message}'          // 🐛 BUG #16
+                        currentBuild.result = "UNSTABLE"
+                    }
+                }
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // STAGE 10 - Deploy (when condition)
+        // ─────────────────────────────────────────────
+        stage('Deploy') {
+            when {
+                expression { params.SKIP_DEPLOY = false }          // 🐛 BUG #17
+            }
+            steps {
+                script {
+                    def tag = getDeployTag(env.BRANCH_NAME, env.BUILD_NUMBER)
+                    echo "Deploying ${env.APP_NAME} with tag ${tag}"
+                    sh "echo deploying to ${env.DEPLOY_ENV}"       // 🐛 BUG #18
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo "Build #${BUILD_NUMBER} finished : ${currentBuild.currentResult}"  // 🐛 BUG #19
+        }
+        success {
+            script {
+                def services = ["auth-service", "user-service", "order-service"]
+                def deployed = ""
+                services.each { svc ->
+                    deployed = deployed + svc + ", "
+                }
+                echo "Deployed: ${deployed}"                        // 🐛 BUG #20 (logical)
             }
         }
     }
