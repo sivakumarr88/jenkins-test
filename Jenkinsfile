@@ -205,7 +205,7 @@ pipeline {
                         sh "cat non-existent-file.txt"
 
                     } catch (e) {
-                        echo 'Caught error: ${e.message}'          // 🐛 BUG #16
+                        echo "Caught error: ${e.message}"          // 🐛 BUG #16
                         currentBuild.result = "UNSTABLE"
                     }
                 }
