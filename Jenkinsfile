@@ -214,7 +214,7 @@ pipeline {
         // ─────────────────────────────────────────────
         stage('Deploy') {
             when {
-                expression { params.SKIP_DEPLOY = false }          // 🐛 BUG #17
+                expression { params.SKIP_DEPLOY == false }          // 🐛 BUG #17
             }
             steps {
                 script {
