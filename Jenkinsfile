@@ -77,7 +77,7 @@ pipeline {
                     // pure shell variable
                     sh """
                         SHELL_VAR="I-am-shell"
-                        echo "Shell Var is: $SHELL_VAR"             // 🐛 BUG #8
+                        echo "Shell Var is: \$SHELL_VAR"             // 🐛 BUG #8
                     """
 
                     // capture shell output back to groovy
