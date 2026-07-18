@@ -49,7 +49,7 @@ pipeline {
                         """
 
                         def testSafe = test ? test : "DEFAULT_VALUE"
-                        echo ${testSafe}
+                        echo "${testSafe}"
 
                         // Elvis - default values
                         def env_name = params.DEPLOY_ENV ?: "dev"
@@ -63,9 +63,9 @@ pipeline {
 
                         def mixedList = ["one", 2, true, 10.5]
 
-                        echo ${mixedList[0]} // prints one
+                        echo "${mixedList[0]}" // prints one
                         for (item in mixedList) {
-                            echo ${item}
+                            echo "${item}"
                         }
 
                         echo mixedList.join(" | ")
