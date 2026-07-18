@@ -47,6 +47,9 @@ pipeline {
                             echo "GROOVY_VAR is ${GROOVY_VAR} (printed from shell script)"
                             echo "SHELL_VAR1 is \${SHELL_VAR1} (printed from shell script)"
                         """
+
+                        def testSafe = test ? test : "DEFAULT_VALUE"
+                        echo ${testSafe}
                     }
 
                     testFunction()
