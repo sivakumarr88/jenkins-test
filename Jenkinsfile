@@ -70,6 +70,12 @@ pipeline {
 
                         echo mixedList.join(" | ")
 
+                        def mixedMap = [name: "Sivakumar", age: 38, male: true, height: 5.8]
+                        echo "${mixedMap['name']}" // prints Sivakumar
+                        for (entry in mixedMap) {
+                            echo "${entry.key} : ${entry.value}"
+                        }
+
                     }
 
                     testFunction()
