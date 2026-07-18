@@ -28,6 +28,9 @@ pipeline {
                         echo "Shell Variable: \${SHELL_VAR}"
                     """
                 }
+
+                def groovyVar = "I am a Groovy variable"
+                echo "Groovy Variable: ${groovyVar}"
             }
         }
     }
