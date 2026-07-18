@@ -87,6 +87,14 @@ pipeline {
                             echo "Grade: D"
                         }
 
+                        mixedList.each {
+                            item -> echo "${item}"
+                        }
+
+                        mixedMap.each {
+                            key, value -> echo "${key} : ${value}"
+                        }
+
                     }
 
                     testFunction()
