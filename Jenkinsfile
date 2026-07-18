@@ -15,6 +15,9 @@ pipeline {
                         println age.class
                         println male.class
                         println height.class
+
+                        echo 'Name is ${name} (printed with single quote)'
+                        echo "Name is ${name} (printed with double quote)"
                     }
 
                     testFunction()
