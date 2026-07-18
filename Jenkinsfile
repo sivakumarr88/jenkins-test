@@ -95,7 +95,7 @@ pipeline {
                 script {
                     def gitTag = env.GIT_TAG                        // might be null
 
-                    def tagMessage = gitTag.toUpperCase()           // 🐛 BUG #10
+                    def tagMessage = gitTag?.toUpperCase()           // 🐛 BUG #10
 
                     def releaseType = gitTag ? "release" : "snapshot"
 
