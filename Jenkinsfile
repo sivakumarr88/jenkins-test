@@ -236,7 +236,7 @@ pipeline {
                 def services = ["auth-service", "user-service", "order-service"]
                 def deployed = ""
                 services.each { svc ->
-                    deployed = "Deployed: " + "${svc} + ", "
+                    deployed = "Deployed: " + "${svc}" + ", "
                 }
                 echo "Deployed: ${deployed}"                        // 🐛 BUG #20 (logical)
             }
