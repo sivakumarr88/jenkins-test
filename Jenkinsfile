@@ -25,7 +25,7 @@ pipeline {
 
                         SHELL_VAR="I am a shell variable"
 
-                        echo "Shell Variable: ${SHELL_VAR}"
+                        echo "Shell Variable: \${SHELL_VAR}"
                     """
                 }
             }
