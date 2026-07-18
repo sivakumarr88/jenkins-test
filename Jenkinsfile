@@ -162,7 +162,7 @@ pipeline {
                 script {
                     def branch = env.BRANCH_NAME
 
-                    if (branch = "main") {                          // 🐛 BUG #14
+                    if (branch == "main") {                          // 🐛 BUG #14
                         echo "Main branch - full build"
                         sh "echo running full build"
                     } else {
