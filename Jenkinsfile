@@ -39,8 +39,10 @@ pipeline {
         // ─────────────────────────────────────────────
         stage('Variable Basics') {
             steps {
-                def appVersion = "1.0.0"        // 🐛 BUG #4
-                echo "Version: ${appVersion}"
+                script {
+                    def appVersion = "1.0.0"        // 🐛 BUG #4 - moved into script block
+                    echo "Version: ${appVersion}"
+                }
             }
         }
 
