@@ -99,7 +99,8 @@ pipeline {
 
                     }
 
-                    testFunction()
+                    def funResult = testFunction()
+                    echo "${funResult}"
                 }
             }
         }
