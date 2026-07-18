@@ -4,7 +4,7 @@
 
 def printBanner(stageName) {
     echo '=============================='        // 🐛 BUG #1
-    echo 'STAGE : ${stageName}'                 // 🐛 BUG #2
+    echo "STAGE : ${stageName}"                 // 🐛 BUG #2
     echo '=============================='
 }
 
@@ -52,8 +52,8 @@ pipeline {
         stage('String and Variable Reference') {
             steps {
                 script {
-                    def buildLabel  = 'Build-${env.BUILD_NUMBER}'   // 🐛 BUG #5
-                    def deployMsg   = "Deploying ${APP_NAME}"       // 🐛 BUG #6
+                    def buildLabel  = "Build-${env.BUILD_NUMBER}"   // 🐛 BUG #5
+                    def deployMsg   = "Deploying ${env.APP_NAME}"       // 🐛 BUG #6
                     def skipTests   = params.SKIP_TESTS
 
                     echo "Label   : ${buildLabel}"
@@ -72,16 +72,16 @@ pipeline {
                     def groovyVar = "I-am-groovy"
 
                     // passing groovy var into shell
-                    sh 'echo Groovy Var is: ${groovyVar}'           // 🐛 BUG #7
+                    sh "echo Groovy Var is: ${groovyVar}"           // 🐛 BUG #7
 
                     // pure shell variable
-                    sh """
+                    sh '''
                         SHELL_VAR="I-am-shell"
                         echo "Shell Var is: \$SHELL_VAR"             // 🐛 BUG #8
-                    """
+                    '''
 
                     // capture shell output back to groovy
-                    def gitCommit = sh("git rev-parse --short HEAD") // 🐛 BUG #9
+                    def gitCommit = sh("git rev-parse --short HEAD", returnStdout: true) // 🐛 BUG #9
                     echo "Git Commit: ${gitCommit}"
                 }
             }
@@ -120,7 +120,7 @@ pipeline {
                     ]
 
                     // access last service
-                    echo "Last Service : ${services[3]}"            // 🐛 BUG #11
+                    echo "Last Service : ${services[2]}"            // 🐛 BUG #11
 
                     // access nested map
                     def selectedConfig = envConfig[params.DEPLOY_ENV]
@@ -145,7 +145,7 @@ pipeline {
 
                     // loop over list
                     for (service in services) {
-                        sh 'echo Building ${service}'               // 🐛 BUG #13
+                        sh "echo Building ${service}"               // 🐛 BUG #13
                     }
 
                     // loop over map
@@ -236,7 +236,7 @@ pipeline {
                 def services = ["auth-service", "user-service", "order-service"]
                 def deployed = ""
                 services.each { svc ->
-                    deployed = deployed + svc + ", "
+                    deployed = "Deployed: " + "${svc} + ", "
                 }
                 echo "Deployed: ${deployed}"                        // 🐛 BUG #20 (logical)
             }
