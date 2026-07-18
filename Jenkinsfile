@@ -29,9 +29,9 @@ pipeline {
                             Height is ${height} (printed with triple single quote)
                         """
 
-                        def testNull = null
-                        echo "${testNull}" // prints null
-                        echo testNull ? "testNull is not null" : "testNull is null" // prints testNull is null
+                        def test = null
+                        echo "${test}" // prints null
+                        echo test ? "test is not null" : "test is null" // prints test is null
                     }
 
                     testFunction()
