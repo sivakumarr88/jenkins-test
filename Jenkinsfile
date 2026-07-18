@@ -95,6 +95,8 @@ pipeline {
                             key, value -> echo "${key} : ${value}"
                         }
 
+                        return "Test function executed successfully"
+
                     }
 
                     testFunction()
