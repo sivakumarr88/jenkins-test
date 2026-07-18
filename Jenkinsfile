@@ -76,6 +76,17 @@ pipeline {
                             echo "${entry.key} : ${entry.value}"
                         }
 
+                        def score = 75
+                        if score >= 90) {
+                            echo "Grade: A"
+                        } else if(score >=80) {
+                            echo "Grade: B"
+                        } else if(score >=70) {
+                            echo "Grade: C"
+                        } else {
+                            echo "Grade: D"
+                        }
+
                     }
 
                     testFunction()
