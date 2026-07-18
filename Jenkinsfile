@@ -81,7 +81,7 @@ pipeline {
                     '''
 
                     // capture shell output back to groovy
-                    def gitCommit = sh("git rev-parse --short HEAD", returnStdout: true) // 🐛 BUG #9
+                    def gitCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim() // 🐛 BUG #9
                     echo "Git Commit: ${gitCommit}"
                 }
             }
