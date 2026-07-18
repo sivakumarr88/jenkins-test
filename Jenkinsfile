@@ -43,9 +43,9 @@ pipeline {
 
                         // Triple double quote → shell + Groovy vars mixed, Groovy vars are expanded
                         sh """
-                            SHELL_VAR="SHELL_VAR"
+                            SHELL_VAR1="SHELL_VAR1"
                             echo "GROOVY_VAR is ${GROOVY_VAR} (printed from shell script)"
-                            echo "SHELL_VAR is ${SHELL_VAR} (printed from shell script)"
+                            echo "SHELL_VAR1 is ${SHELL_VAR1} (printed from shell script)"
                         """
                     }
 
