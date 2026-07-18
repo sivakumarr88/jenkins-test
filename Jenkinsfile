@@ -202,10 +202,14 @@ pipeline {
                 script {
                     try {
                         echo "Trying risky operation..."
-                        sh "cat non-existent-file.txt"
+                        def status = sh(script: 'cat non-existent-file.txt', returnStatus: true)
+                        if (status != 0) {
+                            echo "Command failed with exit ${status}"
+                            currentBuild.result = "UNSTABLE"
+                        }
 
                     } catch (e) {
-                        echo "Caught error: ${e.message}"          // 🐛 BUG #16
+                        echo "Caught error: ${e.message}"          // 🐛 BUG #16 - interpolate exception message
                         currentBuild.result = "UNSTABLE"
                     }
                 }
