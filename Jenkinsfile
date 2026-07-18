@@ -18,6 +18,16 @@ pipeline {
 
                         echo 'Name is ${name} (printed with single quote)'
                         echo "Name is ${name} (printed with double quote)"
+                        echo '''
+                            Age is ${age} (printed with triple single quote)
+                            Male is ${male} (printed with triple single quote)
+                            Height is ${height} (printed with triple single quote)
+                        '''
+                        echo """
+                            Age is ${age} (printed with triple single quote)
+                            Male is ${male} (printed with triple single quote)
+                            Height is ${height} (printed with triple single quote)
+                        """
                     }
 
                     testFunction()
