@@ -29,9 +29,24 @@ pipeline {
                             Height is ${height} (printed with triple single quote)
                         """
 
-                        def testNull = null
-                        echo "${testNull}" // prints null
-                        echo testNull ? "testNull is not null" : "testNull is null" // prints testNull is null
+                        def test = null
+                        echo "${test}" // prints null
+                        echo test ? "test is not null" : "test is null" // prints test is null
+
+                        def GROOVY_VAR = "GROOVY_VAR"
+                        // Triple single quote → pure shell (no Groovy vars are expanded)
+                        sh '''
+                            SHELL_VAR="SHELL_VAR"
+                            echo "GROOVY_VAR is ${GROOVY_VAR} (printed from shell script)"
+                            echo "SHELL_VAR is ${SHELL_VAR} (printed from shell script)"
+                        '''
+
+                        // Triple double quote → shell + Groovy vars mixed, Groovy vars are expanded
+                        sh """
+                            SHELL_VAR="SHELL_VAR"
+                            echo "GROOVY_VAR is ${GROOVY_VAR} (printed from shell script)"
+                            echo "SHELL_VAR is ${SHELL_VAR} (printed from shell script)"
+                        """
                     }
 
                     testFunction()
